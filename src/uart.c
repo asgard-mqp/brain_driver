@@ -29,27 +29,27 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
   //TODO: This needs to be done using getchar() instead
-  // if (fcount(stdout) < 7) {
+  // if (fcount(stdin) < 7) {
   //   return;
   // }
 
-  // printf("checking uart.... %d bytes available\n", fcount(stdout));
+  // printf("checking uart.... %d bytes available\n", fcount(stdin));
 
-  uint8_t startByte = fgetc(stdout); // TODO -- check for partial data
+  uint8_t startByte = fgetc(stdin); // TODO -- check for partial data
   if (startByte != 0xFA) {
     // printf("wrong startByte  %02x", startByte);
     return;
   }
 
-  *packet_id = fgetc(stdout);
+  *packet_id = fgetc(stdin);
 
   uint8_t checksum_calc = 255;
   for (int i = 0; i < 4; i++) {
-    in_data.bytes[i] = fgetc(stdout);
+    in_data.bytes[i] = fgetc(stdin);
     checksum_calc -= in_data.bytes[i];
   }
 
-  uint8_t checksum_given = fgetc(stdout);
+  uint8_t checksum_given = fgetc(stdin);
 
   //   printf("%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", startByte, packet_id,
   //     in_data.bytes[0], in_data.bytes[1], in_data.bytes[2], in_data.bytes[3],
