@@ -25,13 +25,13 @@ void writeUart(uint8_t packet_id, int32_t value) {
   fputc(checksum, stdout);
 }
 
-void readUart(uint8_t packet_id, int32_t value) {
+void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
   //TODO: This needs to be done using getchar() instead
-  if (fcount(stdout) < 7) {
-    return;
-  }
+  // if (fcount(stdout) < 7) {
+  //   return;
+  // }
 
   // printf("checking uart.... %d bytes available\n", fcount(stdout));
 
@@ -41,7 +41,7 @@ void readUart(uint8_t packet_id, int32_t value) {
     return;
   }
 
-  packet_id = fgetc(stdout);
+  *packet_id = fgetc(stdout);
 
   uint8_t checksum_calc = 255;
   for (int i = 0; i < 4; i++) {
@@ -56,8 +56,8 @@ void readUart(uint8_t packet_id, int32_t value) {
   //     checksum_given);
 
   if (false && checksum_calc == checksum_given) {
-    packet_id = 0;
+    *packet_id = 0;
   } else {
-    value = in_data.fullData;
+    *value = in_data.fullData;
   }
 }

@@ -33,11 +33,30 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
 void opcontrol() {
   bool lastY = false, joystickMode = true;
   int16_t leftRPM = 0, rightRPM = 0;
+
+  uint8_t packetID = 0;
+  int32_t value = 0;
   
   initMotors();
   writeUart(0xF5, 50505);
   
   while (true) {
+    readUart(&packetID, &value);
+    switch (packetID) {
+      case 0x1:
+        leftRPM = value / 360.0f;
+        break;
+      case 0x2:
+        rightRPM = value / 360.0f;
+        break;
+      case 0x16:
+        break;
+      case 0x17:
+        break;
+      case 0x18:
+        break;
+    }
+
     if (controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_Y) && !lastY) {
       lastY = true;
       joystickMode = !joystickMode;
@@ -54,5 +73,4 @@ void opcontrol() {
     
     delay(15);
   }
-
 }
