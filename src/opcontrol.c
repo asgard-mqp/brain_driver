@@ -7,10 +7,10 @@ const motor_brake_mode_e brakeMode = E_MOTOR_BRAKE_COAST;
 const motor_encoder_units_e encMode = E_MOTOR_ENCODER_ROTATIONS;
 
 void initMotors() {
-  motor_reset_position(leftMotor1);
-  motor_reset_position(leftMotor2);
-  motor_reset_position(rightMotor1);
-  motor_reset_position(rightMotor2);
+  motor_set_position(leftMotor1, 0);
+  motor_set_position(leftMotor2, 0);
+  motor_set_position(rightMotor1, 0);
+  motor_set_position(rightMotor2, 0);
 
   motor_set_brake_mode(leftMotor1, brakeMode);
   motor_set_brake_mode(leftMotor2, brakeMode);
