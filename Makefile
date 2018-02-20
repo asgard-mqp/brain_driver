@@ -36,8 +36,7 @@ clean:
 	@echo Cleaning project
 	-$Drm -rf $(BINDIR)
 
-$(OUTBIN): $(OUTELF)
-	$(VV)mkdir -p $(dir $@)
+$(OUTBIN): $(OUTELF) $(BINDIR)
 	@echo -n "Creating $@ for $(DEVICE) "
 	$(call test_output,$D$(OBJCOPY) $< -O binary $@,$(DONE_STRING))
 
@@ -49,25 +48,22 @@ $(OUTELF): $(call GETALLOBJ,$(EXCLUDE_SRCDIRS))
 	-$(VV)$(SIZETOOL) $(SIZEFLAGS) $@ | sed --expression='s/  dec/total/' | numfmt --field=-4 --header $(NUMFMTFLAGS)
 
 define asm_rule
-$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1 $(BINDIR)
 	@echo -n "Compiling $$< "
-	$(VV)mkdir -p $$(dir $$@)
 	$$(call test_output,$D$(AS) -c $(ASMFLAGS) -o $$@ $$<,$(OK_STRING))
 endef
 $(foreach asmext,$(ASMEXTS),$(eval $(call asm_rule,$(asmext))))
 
 define c_rule
-$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1 $(BINDIR)
 	@echo -n "Compiling $$< "
-	$(VV)mkdir -p $$(dir $$@)
 	$$(call test_output,$D$(CC) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CFLAGS) $(EXTRA_CFLAGS) -o $$@ $$<,$(OK_STRING))
 endef
 $(foreach cext,$(CEXTS),$(eval $(call c_rule,$(cext))))
 
 define cxx_rule
-$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1
+$(BINDIR)/%.$1.o: $(SRCDIR)/%.$1 $(BINDIR)
 	@echo -n "Compiling $$< "
-	$(VV)mkdir -p $$(dir $$@)
 	$$(call test_output,$D$(CXX) -c $(INCLUDE) -iquote$(INCDIR)/$$(dir $$*) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -o $$@ $$<,$(OK_STRING))
 endef
 $(foreach cxxext,$(CXXEXTS),$(eval $(call cxx_rule,$(cxxext))))
@@ -79,3 +75,6 @@ define _pros_ld_timestamp
 @# which is the pwd | sed ... | tail bit, which will grab the last 3 segments of the path and truncate it 23 characters
 $(call test_output, @echo 'char const * const _PROS_COMPILE_TIMESTAMP = __DATE__ " " __TIME__; char const * const _PROS_COMPILE_DIRECTORY = PCD;' | $(CC) -c -x c $(CFLAGS) $(EXTRA_CFLAGS) -DPCD="\"`pwd | sed -n 's/.*\/\(.*\/.*\/.*\)/\1/p' | tail -c 23`\"" -o $(LDTIMEOBJ) -,$(OK_STRING))
 endef
+
+$(BINDIR):
+	$(VV)mkdir -p $@

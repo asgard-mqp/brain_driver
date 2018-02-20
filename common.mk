@@ -3,7 +3,7 @@ FWDIR:=$(ROOT)/firmware
 SRC:=$(ROOT)/src
 INCLUDE:=$(ROOT)/include
 
-ARCHTUPLE=~/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-
+ARCHTUPLE=arm-none-eabi-
 DEVICE=VEX EDR V5
 
 MFLAGS=-march=armv7-a -mfpu=neon-fp16 -mfloat-abi=softfp
@@ -18,7 +18,7 @@ COMMA := ,
 LNK_FLAGS = -T?%$(FWDIR)/v5.ld --gc-sections
 
 ASMFLAGS=$(MFLAGS) $(WARNFLAGS)
-CFLAGS=$(MFLAGS) $(CPPFLAGS) $(WARNFLAGS) $(GCCFLAGS) --std=gnu11 -Werror=implicit-function-declaration -Wall -pedantic -Wextra -Wno-implicit-fallthrough -Wmissing-include-dirs
+CFLAGS=$(MFLAGS) $(CPPFLAGS) $(WARNFLAGS) $(GCCFLAGS) --std=gnu11
 CXXFLAGS=$(MFLAGS) $(CPPFLAGS) $(WARNFLAGS) -funwind-tables $(GCCFLAGS)  --std=gnu++14
 LDFLAGS=$(MFLAGS) $(WARNFLAGS) -nostdlib  $(subst ?%,$(SPACE),$(addprefix -Wl$(COMMA), $(LNK_FLAGS)))
 SIZEFLAGS=-d --common
