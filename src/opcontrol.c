@@ -78,6 +78,8 @@ void opcontrol() {
 
   
   while (true) {
+    debugDisplay();
+
     int leftJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_LEFT_Y);
     int rightJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_RIGHT_Y);
     if(abs(leftJOY)<15)
@@ -155,7 +157,6 @@ void opcontrol() {
     } else {
       setDrive(leftRPM, rightRPM);
     }
-    debugDisplay();
     writeUart(0xf1, motor_get_position(leftFront));
     writeUart(0xf2, motor_get_position(rightFront));
     delay(10);
