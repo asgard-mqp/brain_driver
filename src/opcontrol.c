@@ -15,7 +15,7 @@ const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
 const int intake = 5; 
 char downButton = 'A'; 
 float upGoal = 105 * 5;
-int goal_state = 0;
+int goal_state = OFF;
 int last_goal_state = -1;
 //0 nothing
 //1 moving up
@@ -89,6 +89,8 @@ void opcontrol() {
       rightJOY = 0;
 
     //State Transitions
+    last_goal_state = goal_state;
+
     if(joystickMode && controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R1))
       goal_state = GO_DOWN;
     if(joystickMode && controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_R2))
