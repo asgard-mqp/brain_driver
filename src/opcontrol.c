@@ -155,6 +155,7 @@ void opcontrol() {
     } else {
       setDrive(leftRPM, rightRPM);
     }
+    debugDisplay();
     writeUart(0xf1, motor_get_position(leftFront));
     writeUart(0xf2, motor_get_position(rightFront));
     delay(10);
