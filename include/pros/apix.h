@@ -299,21 +299,11 @@ void queue_reset(queue_t queue);
 typedef enum v5_device_e {
 	E_DEVICE_NONE = 0,
 	E_DEVICE_MOTOR = 2,
-	E_DEVICE_LED = 3,
-	E_DEVICE_RGB = 4,
-	E_DEVICE_BUMPER = 5,
-	E_DEVICE_IMU = 6,
-	E_DEVICE_RANGE = 7,
 	E_DEVICE_RADIO = 8,
-	E_DEVICE_TETHER = 9,
-	E_DEVICE_BRAIN = 10,
 	E_DEVICE_VISION = 11,
 	E_DEVICE_ADI = 12,
-	E_DEVICE_GYRO = 0x46,
-	E_DEVICE_SONAR = 0x47,
-	E_DEVICE_GENERIC = 128,
 	E_DEVICE_UNDEFINED = 255
-} v5_device_e;
+} v5_device_e_t;
 
 /*
  * \brief Registers a device in the given port
@@ -330,7 +320,7 @@ typedef enum v5_device_e {
  * \exception EINVAL A different device than specified is plugged in.
  * \exception EADDRINUSE the port is already registered to another device
  */
-int registry_bind_port(unsigned int port, v5_device_e device_type);
+int registry_bind_port(uint8_t port, v5_device_e_t device_type);
 
 /*
  * \brief Deregisters a devices from the given port
@@ -343,7 +333,102 @@ int registry_bind_port(unsigned int port, v5_device_e device_type);
  *
  * \exception EINVAL the port number is out of range
  */
-int registry_unbind_port(unsigned int port);
+int registry_unbind_port(uint8_t port);
+
+/******************************************************************************/
+/**                               Filesystem                                 **/
+/******************************************************************************/
+/**
+ * Control settings of the serial driver.
+ *
+ * \param action
+ * 			An action to perform on the serial driver. See the SERCTL_* macros for
+ * 			details on the different actions.
+ * \param extra_arg
+ * 			An argument to pass in based on the action
+ */
+int32_t serctl(const uint32_t action, void* const extra_arg);
+
+/**
+ * Control settings of the microSD card driver.
+ *
+ * \param action
+ * 			An action to perform on the microSD card driver. See the USDCTL_* macros for
+ * 			details on the different actions.
+ * \param extra_arg
+ * 			An argument to pass in based on the action
+ */
+int32_t usdctl(const uint32_t action, void* const extra_arg);
+
+/**
+ * Control settings of the way the file's driver treats the file
+ *
+ * \param file
+ * 			A valid file descriptor number
+ * \param action
+ * 			An action to perform on the file's driver. See the *CTL_* macros for
+ * 			details on the different actions. Note that the action passed in must match
+ * 			the correct driver (e.g. don't perform a SERCTL_* action on a microSD card file)
+ * \param extra_arg
+ * 			An argument to pass in based on the action
+ */
+int32_t fdctl(int file, const uint32_t action, void* const extra_arg);
+
+/**
+ * Action macro to pass into serctl or fdctl that activates the stream identifier.
+ *
+ * When used with serctl, the extra argument must be the little endian representation of
+ * the stream identifier (e.g. "sout" -> 0x74756f73)
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_ACTIVATE 10
+
+/**
+ * Action macro to pass into serctl or fdctl that deactivates the stream identifier.
+ *
+ * When used with serctl, the extra argument must be the little endian representation of
+ * the stream identifier (e.g. "sout" -> 0x74756f73)
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_DEACTIVATE 11
+
+/**
+ * Action macro to pass into fdctl that enables blocking writes for the file
+ *
+ * The extra argument is not used with this action, provide any value (e.g. NULL) instead
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_BLKWRITE 12
+
+/**
+ * Action macro to pass into fdctl that makes writes non-blocking for the file
+ *
+ * The extra argument is not used with this action, provide any value (e.g. NULL) instead
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_NOBLKWRITE 13
+
+/**
+ * Action macro to pass into serctl that enables advanced stream multiplexing capabilities
+ *
+ * The extra argument is not used with this action, provide any value (e.g. NULL) instead
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_ENABLE_COBS 14
+
+/**
+ * Action macro to pass into serctl that disables advanced stream multiplexing capabilities
+ *
+ * The extra argument is not used with this action, provide any value (e.g. NULL) instead
+ *
+ * Visit https://pros.cs.purdue.edu/v5/filesystem#serial to learn more.
+ */
+#define SERCTL_DISABLE_COBS 15
 
 #ifdef __cplusplus
 }

@@ -39,8 +39,8 @@
 
 #define PROS_VERSION_MAJOR 3
 #define PROS_VERSION_MINOR 0
-#define PROS_VERSION_PATCH 0
-#define PROS_VERSION_STRING "3.0.0-beta1"
+#define PROS_PATCH 2
+#define PROS_VERSION_STRING "3.0.3-commit+154731b"
 
 #define PROS_ERR (INT32_MAX)
 #define PROS_ERR_F (INFINITY)
@@ -51,5 +51,10 @@
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rtos.h"
+#include "pros/vision.h"
+
+#ifdef __cplusplus
+#include "pros/adi.hpp"
+#endif
 
 #endif /* _PROS_API_H_ */

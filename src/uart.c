@@ -1,4 +1,6 @@
 #include "api.h"
+extern int32_t inp_buffer_available();
+
 
 union converter {
   int32_t fullData; //occupies 4 bytes
@@ -24,7 +26,9 @@ void writeUart(uint8_t packet_id, int32_t value) {
 
   fputc(checksum, stdout);
 }
-
+int fcount(FILE* file){
+  return inp_buffer_available();
+}
 void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
@@ -32,14 +36,16 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   // if (fcount(stdin) < 7) {
   //   return;
   // }
+  uint8_t startByte;
+  while (fcount(stdin) > 6){
+    startByte = fgetc(stdin);
+    if(startByte == 0xFA){
+      break;
+    }
+
+  }
 
   // printf("checking uart.... %d bytes available\n", fcount(stdin));
-
-  uint8_t startByte = fgetc(stdin); // TODO -- check for partial data
-  if (startByte != 0xFA) {
-    // printf("wrong startByte  %02x", startByte);
-    return;
-  }
 
   *packet_id = fgetc(stdin);
 

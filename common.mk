@@ -3,7 +3,7 @@ FWDIR:=$(ROOT)/firmware
 SRC:=$(ROOT)/src
 INCLUDE:=$(ROOT)/include
 
-ARCHTUPLE=arm-none-eabi-
+ARCHTUPLE=~/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-
 DEVICE=VEX EDR V5
 
 MFLAGS=-march=armv7-a -mfpu=neon-fp16 -mfloat-abi=softfp
