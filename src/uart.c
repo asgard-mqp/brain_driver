@@ -36,13 +36,17 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   // if (fcount(stdin) < 7) {
   //   return;
   // }
-  uint8_t startByte;
+  uint8_t startByte = 0;
   while (fcount(stdin) > 6){
     startByte = fgetc(stdin);
     if(startByte == 0xFA){
       break;
     }
 
+  }
+  if(!startByte){
+    packet_id = 0;//just to make sure
+    return;
   }
 
   // printf("checking uart.... %d bytes available\n", fcount(stdin));
