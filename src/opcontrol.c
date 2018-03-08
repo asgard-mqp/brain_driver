@@ -160,8 +160,9 @@ void opcontrol() {
     } else {
       setDrive(leftRPM, rightRPM);
     }
-    writeUart(0xf1, motor_get_position(leftFront));
-    writeUart(0xf2, motor_get_position(rightFront));
+    //writeUart(0xf1, motor_get_position(leftFront));
+    //writeUart(0xf2, motor_get_position(rightFront));
+    printf("this works though");
     delay(10);
   }
 }
