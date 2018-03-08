@@ -54,10 +54,11 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
 void debugDisplay(){
   display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
   display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake));
+  display_center_printf(2, "Goal State: %d", goal_state);
 
-  display_center_printf(4, "Voltage: %1.2f", battery_get_voltage()); 
-  display_center_printf(5, "Current: %1.2f", battery_get_current()); 
-  display_center_printf(6, "Temperature: %1.2f", battery_get_temperature()); 
+
+  display_center_printf(5, "Voltage: %1.2f", battery_get_voltage()); 
+  display_center_printf(6, "Current: %1.2f", battery_get_current()); 
   display_center_printf(7, "Capacity: %1.2f",  battery_get_capacity()); 
 
   
