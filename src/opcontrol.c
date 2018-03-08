@@ -7,6 +7,8 @@
 #define GO_DOWN 0
 #define HOLD 2
 
+extern int32_t inp_buffer_available();
+
 
 
 const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
@@ -51,14 +53,15 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
 }
 void debugDisplay(){
   display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
-  display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake)); 
-  display_center_printf(3, "Voltage: %1.2f", motor_get_voltage(intake)); 
-  display_center_printf(4, "Current: %d", motor_get_current(intake)); 
-  display_center_printf(5, "Torque: %1.2f", motor_get_torque(intake)); 
-  display_center_printf(6, "Power: %1.2f", motor_get_power(intake)); 
-  display_center_printf(7, "Efficiency: %1.2f", motor_get_efficiency(intake)); 
-  display_center_printf(8, "Temperature: %1.2f", motor_get_temperature(intake)); 
-  display_center_printf(9, "state: %d", goal_state); 
+  display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake));
+
+  display_center_printf(4, "Voltage: %1.2f", battery_get_voltage()); 
+  display_center_printf(5, "Current: %1.2f", battery_get_current()); 
+  display_center_printf(6, "Temperature: %1.2f", battery_get_temperature()); 
+  display_center_printf(7, "Capacity: %1.2f",  battery_get_capacity()); 
+
+  
+  display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
 
 }
 
