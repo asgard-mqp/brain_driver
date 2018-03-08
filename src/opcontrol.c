@@ -104,7 +104,7 @@ void opcontrol() {
       writeUart(0xf3, goal_state); // I arrived at up
     }
 
-    readUart(&packetID, &value);
+    //readUart(&packetID, &value);
     switch (packetID) {
       case 0x1:
         leftRPM = value / 360.0f;
