@@ -28,6 +28,7 @@ void writeUart(uint8_t packet_id, int32_t value) {
 int fcount(FILE* file){
   return inp_buffer_available();
 }
+extern int read_bytes;
 void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
@@ -38,10 +39,10 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   uint8_t startByte = 0;
   while (fcount(stdin) > 6){
     startByte = fgetc(stdin);
-    if(startByte == 0xFA){
+    read_bytes++;
+    if(startByte != 0xFA){
       break;
     }
-
   }
   if(!startByte){
     *packet_id = 0;//just to make sure its denied
