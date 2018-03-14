@@ -10,7 +10,6 @@
 extern int32_t inp_buffer_available();
 
 
-
 const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
 const int intake = 5; 
 char downButton = 'A'; 
@@ -104,25 +103,26 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
-
-    readUart(&packetID, &value);
-    switch (packetID) {
-      case 0x1:
-        leftRPM = value / 360.0f;
-        break;
-      case 0x2:
-        rightRPM = value / 360.0f;
-        break;
-      case 0x3:
-        if(!joystickMode)
-          goal_state = value;
-        break;
-      case 0x16:
-        break;
-      case 0x17:
-        break;
-      case 0x18:
-        break;
+    while(inp_buffer_available() >= 7){// read all the messages available
+      readUart(&packetID, &value);
+      switch (packetID) {
+        case 0x1:
+          leftRPM = value / 360.0f;
+          break;
+        case 0x2:
+          rightRPM = value / 360.0f;
+          break;
+        case 0x3:
+          if(!joystickMode)
+            goal_state = value;
+          break;
+        case 0x16:
+          break;
+        case 0x17:
+          break;
+        case 0x18:
+          break;
+      }
     }
     //do arm states
     if(goal_state != last_goal_state){
