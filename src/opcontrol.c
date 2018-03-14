@@ -31,10 +31,10 @@ int packets_this_loop=0;
 void initMotors() {
   adi_port_config_set(downButton, E_ADI_LEGACY_BUTTON); 
 
-  motor_set_brake_mode(leftFront, E_MOTOR_BRAKE_HOLD);
-  motor_set_brake_mode(rightFront, E_MOTOR_BRAKE_HOLD);
-  motor_set_brake_mode(leftBack, E_MOTOR_BRAKE_HOLD);
-  motor_set_brake_mode(rightBack, E_MOTOR_BRAKE_HOLD);
+  motor_set_brake_mode(leftFront, E_MOTOR_BRAKE_COAST);
+  motor_set_brake_mode(rightFront, E_MOTOR_BRAKE_COAST);
+  motor_set_brake_mode(leftBack, E_MOTOR_BRAKE_COAST);
+  motor_set_brake_mode(rightBack, E_MOTOR_BRAKE_COAST);
 
   motor_encoder_set_units(leftFront, E_MOTOR_ENCODER_COUNTS);
   motor_encoder_set_units(rightFront, E_MOTOR_ENCODER_COUNTS);
