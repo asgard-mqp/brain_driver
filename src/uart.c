@@ -44,7 +44,7 @@ void readUart(uint8_t *packet_id, int32_t *value) {
 
   }
   if(!startByte){
-    packet_id = 0;//just to make sure its denied
+    *packet_id = 0;//just to make sure its denied
     return;
   }
 
