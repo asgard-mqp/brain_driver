@@ -32,10 +32,6 @@ extern int read_bytes;
 void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
-  //TODO: This needs to be done using getchar() instead
-  // if (fcount(stdin) < 7) {
-  //   return;
-  // }
   uint8_t startByte = 0;
   while (fcount(stdin) > 6){
     startByte = fgetc(stdin);
