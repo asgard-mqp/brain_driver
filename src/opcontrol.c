@@ -16,6 +16,11 @@ char downButton = 'A';
 float upGoal = 105 * 5;
 int goal_state = OFF;
 int last_goal_state = -1;
+
+int16_t leftRPM = 0, rightRPM = 0;
+
+int packets_this_loop;
+
 //0 nothing
 //1 moving up
 //2 moving down
@@ -56,9 +61,13 @@ void debugDisplay(){
   display_center_printf(3, "Goal State: %d", goal_state);
 
 
-  display_center_printf(5, "Voltage: %1.2f", battery_get_voltage()); 
-  display_center_printf(6, "Current: %1.2f", battery_get_current()); 
-  display_center_printf(7, "Capacity: %1.2f",  battery_get_capacity()); 
+  if(packets_this_loop){
+    display_center_printf(5, "Packets %d",  packets_this_loop); 
+  }
+  display_center_printf(6, "Left %d   Right %d",leftRPM , rightRPM);
+
+
+  display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
 
   
   display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
@@ -67,17 +76,16 @@ void debugDisplay(){
 
 void opcontrol() {
   serctl(SERCTL_DISABLE_COBS, NULL);//turns of dumb shit
-  bool lastY = false, joystickMode = true;
-  int16_t leftRPM = 0, rightRPM = 0;
+  bool lastY = false, joystickMode = false;
 
   uint8_t packetID = 0;
   int32_t value = 0;
   
   initMotors();
   writeUart(0xF5, 50505);
-
   while (true) {
     debugDisplay();
+    packets_this_loop = 0;
     int leftJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_LEFT_Y);
     int rightJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_RIGHT_Y);
     if(abs(leftJOY)<15)
@@ -105,6 +113,8 @@ void opcontrol() {
     }
     while(inp_buffer_available() >= 7){// read all the messages available
       readUart(&packetID, &value);
+      packets_this_loop ++;
+      display_erase();
       switch (packetID) {
         case 0x1:
           leftRPM = value / 360.0f;
