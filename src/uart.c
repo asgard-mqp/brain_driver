@@ -10,7 +10,6 @@ union converter {
 void writeUart(uint8_t packet_id, int32_t value) {
   union converter out_data;
   out_data.fullData = value;
-
   fputc(0xFA, stdout);
   fputc(packet_id, stdout);
   uint8_t checksum = 255;

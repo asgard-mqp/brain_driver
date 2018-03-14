@@ -77,10 +77,8 @@ void opcontrol() {
   initMotors();
   writeUart(0xF5, 50505);
 
-  
   while (true) {
     debugDisplay();
-
     int leftJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_LEFT_Y);
     int rightJOY = controller_get_analog(CONTROLLER_MASTER, ANALOG_RIGHT_Y);
     if(abs(leftJOY)<15)
@@ -107,7 +105,7 @@ void opcontrol() {
       writeUart(0xf3, goal_state); // I arrived at up
     }
 
-    //readUart(&packetID, &value);
+    readUart(&packetID, &value);
     switch (packetID) {
       case 0x1:
         leftRPM = value / 360.0f;
@@ -160,9 +158,9 @@ void opcontrol() {
     } else {
       setDrive(leftRPM, rightRPM);
     }
-    //writeUart(0xf1, motor_get_position(leftFront));
-    //writeUart(0xf2, motor_get_position(rightFront));
-    printf("this works though");
-    delay(10);
+      writeUart(0xf1, motor_get_position(leftFront));
+      writeUart(0xf2, motor_get_position(rightFront));
+//    printf("this works though");
+    delay(5);
   }
 }
