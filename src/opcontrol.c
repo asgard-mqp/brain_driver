@@ -19,7 +19,7 @@ int last_goal_state = -1;
 
 int16_t leftRPM = 0, rightRPM = 0;
 
-int packets_this_loop;
+int packets_this_loop=0;
 
 //0 nothing
 //1 moving up
@@ -108,8 +108,15 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
-    if(inp_buffer_available())
+    if(inp_buffer_available()>0){
         display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
+    }
+ if(inp_buffer_available()==0){
+       display_center_printf(9, "Bytes left: was 0");
+   }
+ if(inp_buffer_available()>0){
+       display_center_printf(9, "Bytes left test");
+   }
     while(inp_buffer_available() >= 7){// read all the messages available
       readUart(&packetID, &value);
       packets_this_loop ++;
@@ -173,6 +180,6 @@ void opcontrol() {
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
 //    printf("this works though");
-    delay(100);
+    delay(5);
   }
 }
