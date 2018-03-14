@@ -69,9 +69,6 @@ void debugDisplay(){
 
   display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
 
-  
-  display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
-
 }
 
 void opcontrol() {
@@ -111,6 +108,8 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
+    if(inp_buffer_available())
+        display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
     while(inp_buffer_available() >= 7){// read all the messages available
       readUart(&packetID, &value);
       packets_this_loop ++;
@@ -132,6 +131,9 @@ void opcontrol() {
           break;
         case 0x18:
           break;
+        default:
+          packets_this_loop --;
+          break; //dont count broken packets
       }
     }
     //do arm states
@@ -171,6 +173,6 @@ void opcontrol() {
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
 //    printf("this works though");
-    delay(5);
+    delay(100);
   }
 }
