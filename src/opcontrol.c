@@ -67,7 +67,7 @@ void debugDisplay(){
   display_center_printf(6, "Left %d   Right %d",leftRPM , rightRPM);
 
 
-  display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
+  //display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
 
 }
 
@@ -110,7 +110,7 @@ void opcontrol() {
     }
     if(fcount(stdin)>0){
         display_erase();
-        display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
+        display_center_printf(8, "Bytes left start: %d", fcount(stdin)); 
     }
     while(fcount(stdin) >= 7){// read all the messages available
       readUart(&packetID, &value);
@@ -136,6 +136,7 @@ void opcontrol() {
           packets_this_loop --;
           break; //dont count broken packets
       }
+      display_center_printf(9, "Bytes left end: %d", fcount(stdin));
     }
     //do arm states
     if(goal_state != last_goal_state){
