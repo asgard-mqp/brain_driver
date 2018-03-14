@@ -8,7 +8,7 @@
 #define HOLD 2
 
 extern int32_t inp_buffer_available();
-
+extern int fcount(FILE* file);
 
 const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
 const int intake = 5; 
@@ -108,19 +108,13 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
-    if(inp_buffer_available()>0){
+    if(fcount(stdin)>0){
+        display_erase();
         display_center_printf(9, "Bytes left: %d", inp_buffer_available()); 
     }
- if(inp_buffer_available()==0){
-       display_center_printf(9, "Bytes left: was 0");
-   }
- if(inp_buffer_available()>0){
-       display_center_printf(9, "Bytes left test");
-   }
-    while(inp_buffer_available() >= 7){// read all the messages available
+    while(fcount(stdin) >= 7){// read all the messages available
       readUart(&packetID, &value);
       packets_this_loop ++;
-      display_erase();
       switch (packetID) {
         case 0x1:
           leftRPM = value / 360.0f;
