@@ -36,7 +36,7 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   while (fcount(stdin) > 6){
     startByte = fgetc(stdin);
     read_bytes++;
-    if(startByte != 0xFA){
+    if(startByte == 0xFA){
       break;
     }
   }
