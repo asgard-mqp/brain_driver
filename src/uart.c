@@ -52,39 +52,42 @@ void testUart(){
     data[14]
     );
 }
-void readUart(uint8_t *packet_id, int32_t *value) {
+void readUart(uint8_t *packet_id, int32_t *value,int line) {
   union converter in_data;
 
   uint8_t startByte = 0;
-  /*while (fcount(stdin) > 6){
-    startByte = fgetc(stdin);
-    read_bytes++;
-    if(startByte == 0xFA){
-      break;
-    }
-  }*/
-  startByte = fgetc(stdin);
+  uint8_t data[7];
+  fread(data,1,1,stdin);
+
+  startByte = data[0];
   
+  /*
   if(startByte != 0xFA){
     *packet_id = 0;//just to make sure its denied
     return;
-  }
+  }*/
 
-  // printf("checking uart.... %d bytes available\n", fcount(stdin));
-
-  *packet_id = fgetc(stdin);
+  fread(data[1],1,6,stdin);
+  *packet_id = data[1];
 
   uint8_t checksum_calc = 255;
   for (int i = 0; i < 4; i++) {
-    in_data.bytes[i] = fgetc(stdin);
-    checksum_calc -= in_data.bytes[i];
+    in_data.bytes[i] = data[i+2];
+    checksum_calc -= data[i+2];
   }
 
-  uint8_t checksum_given = fgetc(stdin);
+  uint8_t checksum_given = data[6];
 
-  //   printf("%02x:%02x:%02x:%02x:%02x:%02x:%02x\n", startByte, packet_id,
-  //     in_data.bytes[0], in_data.bytes[1], in_data.bytes[2], in_data.bytes[3],
-  //     checksum_given);
+  display_center_printf(9,"%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
+    data[0],
+    data[1],
+    data[2],
+    data[3],
+    data[4],
+    data[5],
+    data[6]
+    );
+
 
   if (false && checksum_calc == checksum_given) {
     *packet_id = 0;

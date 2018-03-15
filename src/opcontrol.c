@@ -114,7 +114,8 @@ void opcontrol() {
         read_bytes=0; 
    //}
     //while(fcount(stdin) >= 7){// read all the messages available
-      readUart(&packetID, &value);
+      readUart(&packetID, &value,9);
+      readUart(&packetID, &value,10);
       packets_this_loop ++;
       switch (packetID) {
         case 0x1:
