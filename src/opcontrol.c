@@ -112,8 +112,8 @@ void opcontrol() {
         display_erase();
         display_center_printf(8, "Bytes left start: %d", fcount(stdin)); 
         read_bytes=0; 
-   }
-    while(fcount(stdin) >= 7){// read all the messages available
+   //}
+    //while(fcount(stdin) >= 7){// read all the messages available
       readUart(&packetID, &value);
       packets_this_loop ++;
       switch (packetID) {
@@ -124,7 +124,7 @@ void opcontrol() {
           rightRPM = value / 360.0f;
           break;
         case 0x3:
-          if(!joystickMode)
+          if(!joystickMode) 
             goal_state = value;
           break;
         case 0x16:
@@ -134,7 +134,7 @@ void opcontrol() {
         case 0x18:
           break;
         default:
-        //  packets_this_loop --;
+          packets_this_loop --;
           break; //dont count broken packets
       }
       display_center_printf(9, "Bytes left end: %d", fcount(stdin));
@@ -178,6 +178,6 @@ void opcontrol() {
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
 //    printf("this works though");
-    delay(5);
+    delay(100);
   }
 }

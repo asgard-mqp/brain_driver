@@ -33,14 +33,16 @@ void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
   uint8_t startByte = 0;
-  while (fcount(stdin) > 6){
+  /*while (fcount(stdin) > 6){
     startByte = fgetc(stdin);
     read_bytes++;
     if(startByte == 0xFA){
       break;
     }
-  }
-  if(!startByte){
+  }*/
+  startByte = fgetc(stdin);
+  
+  if(startByte != 0xFA){
     *packet_id = 0;//just to make sure its denied
     return;
   }
