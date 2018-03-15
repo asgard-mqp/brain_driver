@@ -56,10 +56,10 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
     motor_set_velocity(rightFront, rightVel);
 }
 void debugDisplay(){
-  display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
+  /*display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
   display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake));
   display_center_printf(3, "Goal State: %d", goal_state);
-
+*/
 
   if(packets_this_loop){
     display_center_printf(5, "Packets %d",  packets_this_loop); 
@@ -137,8 +137,8 @@ void opcontrol() {
           packets_this_loop --;
           break; //dont count broken packets
       }
-      display_center_printf(9, "Bytes left end: %d", fcount(stdin));
-      display_center_printf(10, "Bytes read dumb: %d",read_bytes);
+      display_center_printf(1, "Bytes left end: %d", fcount(stdin));
+      display_center_printf(2, "Bytes read dumb: %d",read_bytes);
 
     }
     //do arm states
@@ -178,6 +178,6 @@ void opcontrol() {
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
 //    printf("this works though");
-    delay(100);
+    delay(5);
   }
 }

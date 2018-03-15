@@ -29,6 +29,29 @@ int fcount(FILE* file){
   return inp_buffer_available();
 }
 extern int read_bytes;
+void testUart(){
+  uint8_t data[14];
+  fread(data,1,14,stdin);
+  display_center_printf(9,"%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
+    data[0],
+    data[1],
+    data[2],
+    data[3],
+    data[4],
+    data[5],
+    data[6]
+    );
+  display_center_printf(10,"%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
+    data[7],
+    data[8],
+    data[9],
+    data[10],
+    data[11],
+    data[12],
+    data[13],
+    data[14]
+    );
+}
 void readUart(uint8_t *packet_id, int32_t *value) {
   union converter in_data;
 
