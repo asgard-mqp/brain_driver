@@ -1,7 +1,7 @@
 #include "api.h"
 extern int32_t inp_buffer_available();
 extern int bytes_in_buffer;
-
+extern int32_t chassis_updates_sent;
 
 union converter {
   int32_t fullData; //occupies 4 bytes
@@ -18,6 +18,12 @@ void writeUart(uint8_t packet_id, int32_t value) {
   for (int i = 0; i < 4; i++) {
     checksum -= out_data.bytes[i];
     fputc(out_data.bytes[i], stdout);
+  }
+  union converter packet_number;
+  packet_number.fullData = chassis_updates_sent;
+  for (int i = 0; i < 4; i++) {
+    checksum -= packet_number.bytes[i];
+    fputc(packet_number.bytes[i], stdout);
   }
 
   // printf("FA:%02x:%02x:%02x:%02x:%02x:%02x\n", packet_id,
@@ -56,7 +62,6 @@ void testUart(){
 }
 void readUart(uint8_t *packet_id, int32_t *value,int line) {
   union converter in_data;
-
   uint8_t startByte = 0;
   uint8_t data[7];
   fread(data,1,1,stdin);

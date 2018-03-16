@@ -16,6 +16,7 @@ char downButton = 'A';
 float upGoal = 100 * 5;
 int goal_state = OFF;
 int last_goal_state = -1;
+int32_t chassis_updates_sent = 0;
 
 int16_t leftRPM = 0, rightRPM = 0;
 
@@ -178,6 +179,7 @@ void opcontrol() {
     }
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
+      chassis_updates_sent ++;
 //    printf("this works though");
     delay(10);
   }
