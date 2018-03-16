@@ -178,6 +178,7 @@ void opcontrol() {
     }
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
+      fflush(stdout);
 //    printf("this works though");
     delay(10);
   }
