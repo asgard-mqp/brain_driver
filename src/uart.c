@@ -1,5 +1,6 @@
 #include "api.h"
 extern int32_t inp_buffer_available();
+extern int bytes_in_buffer;
 
 
 union converter {
@@ -48,9 +49,10 @@ void testUart(){
     data[10],
     data[11],
     data[12],
-    data[13],
-    data[14]
+    data[13]
     );
+    bytes_in_buffer -=14;
+
 }
 void readUart(uint8_t *packet_id, int32_t *value,int line) {
   union converter in_data;
@@ -58,17 +60,17 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
   uint8_t startByte = 0;
   uint8_t data[7];
   fread(data,1,1,stdin);
-
+  bytes_in_buffer -=1;
   startByte = data[0];
-  
-  /*
+
   if(startByte != 0xFA){
     *packet_id = 0;//just to make sure its denied
     return;
-  }*/
+  }
 
-  fread(data[1],1,6,stdin);
+  fread(&data[1],1,6,stdin);
   *packet_id = data[1];
+  bytes_in_buffer -=6;
 
   uint8_t checksum_calc = 255;
   for (int i = 0; i < 4; i++) {
@@ -78,7 +80,7 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
 
   uint8_t checksum_given = data[6];
 
-  display_center_printf(9,"%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
+  display_center_printf(line,"%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
     data[0],
     data[1],
     data[2],

@@ -13,7 +13,7 @@ int read_bytes;
 const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
 const int intake = 5; 
 char downButton = 'A'; 
-float upGoal = 105 * 5;
+float upGoal = 100 * 5;
 int goal_state = OFF;
 int last_goal_state = -1;
 
@@ -56,28 +56,27 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
     motor_set_velocity(rightFront, rightVel);
 }
 void debugDisplay(){
-  /*display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
+  display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
   display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake));
   display_center_printf(3, "Goal State: %d", goal_state);
-*/
 
+/*
   if(packets_this_loop){
     display_center_printf(5, "Packets %d",  packets_this_loop); 
   }
   display_center_printf(6, "Left %d   Right %d",leftRPM , rightRPM);
-
+*/
 
   //display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
 
 }
-
+int bytes_in_buffer = 0;
 void opcontrol() {
   serctl(SERCTL_DISABLE_COBS, NULL);//turns of dumb shit
   bool lastY = false, joystickMode = false;
 
   uint8_t packetID = 0;
   int32_t value = 0;
-  
   initMotors();
   writeUart(0xF5, 50505);
   while (true) {
@@ -108,14 +107,14 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
-    if(fcount(stdin)>0){
+    if(fcount(stdin) + bytes_in_buffer>= 7){
         display_erase();
-        display_center_printf(8, "Bytes left start: %d", fcount(stdin)); 
-        read_bytes=0; 
-   //}
-    //while(fcount(stdin) >= 7){// read all the messages available
-      readUart(&packetID, &value,9);
-      readUart(&packetID, &value,10);
+        display_center_printf(8, "Bytes left start: %d", fcount(stdin));
+        read_bytes=0;
+	bytes_in_buffer += fcount(stdin);
+    while(bytes_in_buffer >= 7){// read all the messages available
+      readUart(&packetID, &value,9+packets_this_loop);
+    //  readUart(&packetID, &value,10);
       packets_this_loop ++;
       switch (packetID) {
         case 0x1:
@@ -138,10 +137,11 @@ void opcontrol() {
           packets_this_loop --;
           break; //dont count broken packets
       }
-      display_center_printf(1, "Bytes left end: %d", fcount(stdin));
-      display_center_printf(2, "Bytes read dumb: %d",read_bytes);
+      display_center_printf(4, "Bytes left end: %d", fcount(stdin));
+      display_center_printf(5, "Bytes read dumb: %d",read_bytes);
 
     }
+}
     //do arm states
     if(goal_state != last_goal_state){
       switch(goal_state){
@@ -179,6 +179,6 @@ void opcontrol() {
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
 //    printf("this works though");
-    delay(5);
+    delay(10);
   }
 }
