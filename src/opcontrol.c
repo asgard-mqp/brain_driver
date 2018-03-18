@@ -67,7 +67,7 @@ void debugDisplay(){
   display_center_printf(6, "Left %d   Right %d",leftRPM , rightRPM);
 */
 
-  //display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
+  display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
 
 }
 int bytes_in_buffer = 0;
