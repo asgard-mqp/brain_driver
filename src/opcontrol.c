@@ -11,7 +11,7 @@ extern int32_t inp_buffer_available();
 extern int fcount(FILE* file);
 int read_bytes;
 const int leftFront = 12, rightFront = 11, leftBack = 14, rightBack =13;
-const int intake = 5; 
+const int intake = 15; 
 char downButton = 'A'; 
 float upGoal = 100 * 5;
 int goal_state = OFF;
