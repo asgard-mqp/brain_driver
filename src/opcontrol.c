@@ -44,8 +44,8 @@ void initMotors() {
   motor_encoder_set_units(intake, E_MOTOR_ENCODER_DEGREES);
 
   
-  motor_set_reverse(leftFront, true);
-  motor_set_reverse(leftBack, true);
+  motor_set_reverse(rightFront, true);
+  motor_set_reverse(rightBack, true);
 }
 
 void setDrive(int16_t leftVel, int16_t rightVel) {
