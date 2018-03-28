@@ -48,11 +48,11 @@ void initMotors() {
 }
 
 void setDrive(int16_t leftVel, int16_t rightVel) {
-    motor_set_velocity(leftFront, leftVel);
-    motor_set_velocity(leftBack, leftVel);
+  motor_set_velocity(leftFront, leftVel);
+  motor_set_velocity(leftBack, leftVel);
 
-    motor_set_velocity(rightBack, rightVel);
-    motor_set_velocity(rightFront, rightVel);
+  motor_set_velocity(rightBack, rightVel);
+  motor_set_velocity(rightFront, rightVel);
 }
 void debugDisplay(){
   display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
@@ -108,74 +108,74 @@ void opcontrol() {
     }
     if(fcount(stdin) + bytes_in_buffer>= 7){
       display_erase();
-      display_center_printf(8, "Bytes left start: %d", fcount(stdin));
+      display_center_printf(8, "Bytes left start: %d", fcount(stdin) + bytes_in_buffer);
       while(fcount(stdin) + bytes_in_buffer >= 7){// read all the messages available
         readUart(&packetID, &value,9+packets_this_loop);
       //  readUart(&packetID, &value,10);
         packets_this_loop ++;
         switch (packetID) {
           case 0x1:
-            leftRPM = value / 360.0f;
-            break;
+          leftRPM = value / 360.0f;
+          break;
           case 0x2:
-            rightRPM = value / 360.0f;
-            break;
+          rightRPM = value / 360.0f;
+          break;
           case 0x3:
-            if(!joystickMode) 
-              goal_state = value;
-            break;
+          if(!joystickMode) 
+            goal_state = value;
+          break;
           case 0x16:
-            break;
+          break;
           case 0x17:
-            break;
+          break;
           case 0x18:
-            break;
+          break;
           default:
-            packets_this_loop --;
+          packets_this_loop --;
             break; //dont count broken packets
-        }
-        display_center_printf(4, "Bytes left end: %d", fcount(stdin));
+          }
+          display_center_printf(4, "Bytes left end: %d", fcount(stdin) + bytes_in_buffer);
 
+        }
       }
-}
     //do arm states
-    if(goal_state != last_goal_state){
-      switch(goal_state){
-        case OFF:
+      if(goal_state != last_goal_state){
+        switch(goal_state){
+          case OFF:
           motor_set_brake_mode(intake, E_MOTOR_BRAKE_COAST);
           motor_set_velocity(intake,0);
           break;
-        case GO_UP:
+          case GO_UP:
           motor_set_brake_mode(intake, E_MOTOR_BRAKE_HOLD);
           motor_set_absolute_target(intake,upGoal,100);
           break;
-        case GO_DOWN:
+          case GO_DOWN:
           motor_set_brake_mode(intake, E_MOTOR_BRAKE_HOLD);
           motor_set_velocity(intake,-100);
           break;
-        case HOLD:
+          case HOLD:
           motor_set_velocity(intake,0);
           motor_set_brake_mode(intake, E_MOTOR_BRAKE_HOLD);
           break;
+        }
       }
-    }
-    if (controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_Y) && !lastY) {
-      lastY = true;
-      joystickMode = !joystickMode;
-    } else {
-      lastY = false;
-    }
+      if (controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_Y) && !lastY) {
+        lastY = true;
+        joystickMode = !joystickMode;
+      } else {
+        lastY = false;
+      }
 
-    if (joystickMode) {
-      setDrive(leftJOY,
-               rightJOY);
-    } else {
-      setDrive(leftRPM, rightRPM);
-    }
+      if (joystickMode) {
+        setDrive(leftJOY,
+         rightJOY);
+      } else {
+        setDrive(leftRPM, rightRPM);
+      }
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
       fflush(stdout);
 //    printf("this works though");
-    delay(10);
+      delay(10);
+    }
   }
-}
