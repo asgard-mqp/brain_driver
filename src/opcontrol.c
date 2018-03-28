@@ -134,9 +134,9 @@ void opcontrol() {
           packets_this_loop --;
             break; //dont count broken packets
           }
-          display_center_printf(4, "Bytes left end: %d", fcount(stdin) + bytes_in_buffer);
-
         }
+        display_center_printf(4, "Bytes left end: %d", fcount(stdin) + bytes_in_buffer);
+
       }
     //do arm states
       if(goal_state != last_goal_state){
