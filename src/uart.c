@@ -59,6 +59,8 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
 
   uint8_t startByte = 0;
   uint8_t data[7];
+  bytes_in_buffer += fcount(stdin);
+
   fread(data,1,1,stdin);
   bytes_in_buffer -=1;
   startByte = data[0];
@@ -67,7 +69,7 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
     *packet_id = 0;//just to make sure its denied
     return;
   }
-
+  bytes_in_buffer += fcount(stdin);
   fread(&data[1],1,6,stdin);
   *packet_id = data[1];
   bytes_in_buffer -=6;

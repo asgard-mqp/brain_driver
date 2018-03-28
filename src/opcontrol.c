@@ -108,39 +108,38 @@ void opcontrol() {
       writeUart(0xf3, goal_state); // I arrived at up
     }
     if(fcount(stdin) + bytes_in_buffer>= 7){
-        display_erase();
-        display_center_printf(8, "Bytes left start: %d", fcount(stdin));
-        read_bytes=0;
-	bytes_in_buffer += fcount(stdin);
-    while(bytes_in_buffer >= 7){// read all the messages available
-      readUart(&packetID, &value,9+packets_this_loop);
-    //  readUart(&packetID, &value,10);
-      packets_this_loop ++;
-      switch (packetID) {
-        case 0x1:
-          leftRPM = value / 360.0f;
-          break;
-        case 0x2:
-          rightRPM = value / 360.0f;
-          break;
-        case 0x3:
-          if(!joystickMode) 
-            goal_state = value;
-          break;
-        case 0x16:
-          break;
-        case 0x17:
-          break;
-        case 0x18:
-          break;
-        default:
-          packets_this_loop --;
-          break; //dont count broken packets
-      }
-      display_center_printf(4, "Bytes left end: %d", fcount(stdin));
-      display_center_printf(5, "Bytes read dumb: %d",read_bytes);
+      display_erase();
+      display_center_printf(8, "Bytes left start: %d", fcount(stdin));
+      read_bytes=0;
+      while(fcount(stdin) + bytes_in_buffer >= 7){// read all the messages available
+        readUart(&packetID, &value,9+packets_this_loop);
+      //  readUart(&packetID, &value,10);
+        packets_this_loop ++;
+        switch (packetID) {
+          case 0x1:
+            leftRPM = value / 360.0f;
+            break;
+          case 0x2:
+            rightRPM = value / 360.0f;
+            break;
+          case 0x3:
+            if(!joystickMode) 
+              goal_state = value;
+            break;
+          case 0x16:
+            break;
+          case 0x17:
+            break;
+          case 0x18:
+            break;
+          default:
+            packets_this_loop --;
+            break; //dont count broken packets
+        }
+        display_center_printf(4, "Bytes left end: %d", fcount(stdin));
+        display_center_printf(5, "Bytes read dumb: %d",read_bytes);
 
-    }
+      }
 }
     //do arm states
     if(goal_state != last_goal_state){
