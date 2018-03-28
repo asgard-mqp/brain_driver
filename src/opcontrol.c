@@ -9,7 +9,6 @@
 
 extern int32_t inp_buffer_available();
 extern int fcount(FILE* file);
-int read_bytes;
 const int leftFront = 19, rightFront = 13, leftBack = 20, rightBack =14;
 const int intake = 15; 
 char downButton = 'A'; 
@@ -110,7 +109,6 @@ void opcontrol() {
     if(fcount(stdin) + bytes_in_buffer>= 7){
       display_erase();
       display_center_printf(8, "Bytes left start: %d", fcount(stdin));
-      read_bytes=0;
       while(fcount(stdin) + bytes_in_buffer >= 7){// read all the messages available
         readUart(&packetID, &value,9+packets_this_loop);
       //  readUart(&packetID, &value,10);
@@ -137,7 +135,6 @@ void opcontrol() {
             break; //dont count broken packets
         }
         display_center_printf(4, "Bytes left end: %d", fcount(stdin));
-        display_center_printf(5, "Bytes read dumb: %d",read_bytes);
 
       }
 }

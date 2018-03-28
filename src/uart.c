@@ -29,7 +29,6 @@ void writeUart(uint8_t packet_id, int32_t value) {
 int fcount(FILE* file){
   return inp_buffer_available();
 }
-extern int read_bytes;
 void testUart(){
   uint8_t data[14];
   fread(data,1,14,stdin);
