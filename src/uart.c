@@ -58,10 +58,12 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
 
   uint8_t startByte = 0;
   uint8_t data[7];
-  bytes_in_buffer += fcount(stdin);
 
+  bytes_in_buffer += fcount(stdin);
   fread(data,1,1,stdin);
   bytes_in_buffer -=1;
+  bytes_in_buffer -= fcount(stdin);
+
   startByte = data[0];
 
   if(startByte != 0xFA){
@@ -70,8 +72,10 @@ void readUart(uint8_t *packet_id, int32_t *value,int line) {
   }
   bytes_in_buffer += fcount(stdin);
   fread(&data[1],1,6,stdin);
-  *packet_id = data[1];
   bytes_in_buffer -=6;
+  bytes_in_buffer -= fcount(stdin);
+
+  *packet_id = data[1];
 
   uint8_t checksum_calc = 255;
   for (int i = 0; i < 4; i++) {

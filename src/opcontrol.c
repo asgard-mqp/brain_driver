@@ -10,8 +10,8 @@
 extern int32_t inp_buffer_available();
 extern int fcount(FILE* file);
 const int leftFront = 19, rightFront = 13, leftBack = 20, rightBack =14;
-const int intake = 15; 
-char downButton = 'A'; 
+const int intake = 15;
+char downButton = 'A';
 float upGoal = 100 * 5;
 int goal_state = OFF;
 int last_goal_state = -1;
@@ -28,7 +28,7 @@ int packets_this_loop=0;
 
 
 void initMotors() {
-  adi_port_config_set(downButton, E_ADI_LEGACY_BUTTON); 
+  adi_port_config_set(downButton, E_ADI_LEGACY_BUTTON);
 
   motor_set_brake_mode(leftFront, E_MOTOR_BRAKE_COAST);
   motor_set_brake_mode(rightFront, E_MOTOR_BRAKE_COAST);
@@ -42,7 +42,7 @@ void initMotors() {
 
   motor_encoder_set_units(intake, E_MOTOR_ENCODER_DEGREES);
 
-  
+
   motor_set_reverse(rightFront, true);
   motor_set_reverse(rightBack, true);
 }
@@ -54,21 +54,22 @@ void setDrive(int16_t leftVel, int16_t rightVel) {
   motor_set_velocity(rightBack, rightVel);
   motor_set_velocity(rightFront, rightVel);
 }
+
 void debugDisplay(){
-  display_center_printf(1, "Position: %1.2f", motor_get_position(intake)); 
+  display_center_printf(1, "Position: %1.2f", motor_get_position(intake));
   display_center_printf(2, "Velocity: %1.2f", motor_get_actual_velocity(intake));
   display_center_printf(3, "Goal State: %d", goal_state);
 
 /*
   if(packets_this_loop){
-    display_center_printf(5, "Packets %d",  packets_this_loop); 
+    display_center_printf(5, "Packets %d",  packets_this_loop);
   }
   display_center_printf(6, "Left %d   Right %d",leftRPM , rightRPM);
 */
 
-  display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity()); 
-
+  // display_center_printf(8, "Capacity: %1.2f",  battery_get_capacity());
 }
+
 int bytes_in_buffer = 0;
 void opcontrol() {
   serctl(SERCTL_DISABLE_COBS, NULL);//turns of dumb shit
@@ -106,12 +107,13 @@ void opcontrol() {
       goal_state = HOLD;
       writeUart(0xf3, goal_state); // I arrived at up
     }
-    if(fcount(stdin) + bytes_in_buffer>= 7){
+
+    if(fcount(stdin) + bytes_in_buffer>= 7) {
       display_erase();
       display_center_printf(8, "Bytes left start: %d", fcount(stdin) + bytes_in_buffer);
-      while(fcount(stdin) + bytes_in_buffer >= 7){// read all the messages available
-        readUart(&packetID, &value,9+packets_this_loop);
-      //  readUart(&packetID, &value,10);
+      while (fcount(stdin) + bytes_in_buffer >= 7) {// read all the messages available
+        readUart(&packetID, &value, 9+packets_this_loop);
+        //  readUart(&packetID, &value,10);
         packets_this_loop ++;
         switch (packetID) {
           case 0x1:
@@ -121,7 +123,7 @@ void opcontrol() {
           rightRPM = value / 360.0f;
           break;
           case 0x3:
-          if(!joystickMode) 
+          if(!joystickMode)
             goal_state = value;
           break;
           case 0x16:
@@ -133,14 +135,14 @@ void opcontrol() {
           default:
           packets_this_loop --;
             break; //dont count broken packets
-          }
         }
-        display_center_printf(4, "Bytes left end: %d", fcount(stdin) + bytes_in_buffer);
-
       }
+
+      display_center_printf(4, "Bytes left end: %d", fcount(stdin) + bytes_in_buffer);
+    }
     //do arm states
-      if(goal_state != last_goal_state){
-        switch(goal_state){
+      if(goal_state != last_goal_state) {
+        switch(goal_state) {
           case OFF:
           motor_set_brake_mode(intake, E_MOTOR_BRAKE_COAST);
           motor_set_velocity(intake,0);
@@ -159,6 +161,7 @@ void opcontrol() {
           break;
         }
       }
+
       if (controller_get_digital(CONTROLLER_MASTER, E_CONTROLLER_DIGITAL_Y) && !lastY) {
         lastY = true;
         joystickMode = !joystickMode;
@@ -172,10 +175,11 @@ void opcontrol() {
       } else {
         setDrive(leftRPM, rightRPM);
       }
+
       writeUart(0xf1, motor_get_position(leftFront));
       writeUart(0xf2, motor_get_position(rightFront));
       fflush(stdout);
-//    printf("this works though");
+      // printf("this works though");
       delay(10);
     }
   }
